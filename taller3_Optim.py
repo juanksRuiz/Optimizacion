@@ -6,7 +6,18 @@ LIM_INF = -1000
 LIM_SUP = 1000
 Eps_Interval =10**(-7) #Error de los intervalos
 E = 10**(-5) #Error entre dos minimos
+a = -1
+b = 1
 
+def f1(x):
+    res = (x[0]**2) + (x[1]**2)
+    return res
+
+def f2(x):
+    res = (x[0]**2)
+    return res
+def f3(x):
+    res = (x[0]**2)-x[1]
 
 def MatCanonicos(x):
     m = []
@@ -23,17 +34,59 @@ def MatCanonicos(x):
     return m
 
 
+
         
-def MCC(f,x,Eps):
-    textNoMin = "LIMITE IZQUIERDO O DERECHO ALCANZADO"
+def MCC(f,x,Eps,maxit):
+    #maxit empieza desde n y va disminuyendo
     dicInfo = {
         1: "Proceso terminado satisfactoriamente",
         0: "LIMITE DE ITERACIONES EXCEDIDO",
         -1: "optimo no acotado detectado"
     }
+    print "Iteraciones restantes: ",maxit
+    if maxit == 0:
+        print dicInfo[0]
+        return [x,f(x)]
+    
     if len(x) == 0:
         return "ERROR: x debe tener al menor una componente"
+    
     d = MatCanonicos(x)
-    for i in range(len(d)):
-        #Se mira todos los minimos desde un punto ? o como funciona?
-        res = minF_enR(f,x,d[i])
+    y_i = x
+    cont = 0
+    y_i1 = y_i
+
+    Y = [y_i]
+    
+    while cont < len(d):
+        print "----------------"
+        print "vector canonico: ",d[cont]
+        res = minF_enR(f,y_i1,d[cont],0,1,0.1)
+        
+        if res == 'inf':
+            #En el caso que se desborde en la recta
+            print dicInfo[-1]
+            return [Y[-1],res[1]]
+
+        else:
+            tmin = res[0]
+            print "y_i: ",y_i1
+            y_i1 = y_i + tmin*d[cont]
+            print "y_i_1: ",y_i1
+            Y.append(y_i1)
+            print "Y: ",Y
+            cont = cont + 1
+            
+    if abs(f(Y[-1]) - f(Y[-2])) <= Eps:
+        print "Diferencia final MINIMA"
+        print dicInfo[1]
+        return [Y[-1],f(Y[-1])]
+    else:
+        cont = 0
+        a = Y[-1]
+        print "Repitiendo el metodo..."
+        MCC(f,a,Eps,maxit-1)
+
+
+x = np.array([1,1])
+print MCC(f1,x,0.001,5)

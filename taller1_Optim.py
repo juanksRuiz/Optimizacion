@@ -22,15 +22,16 @@ def min1abFB(f,x,d,a,b,h):
     #t varia entre a y b
     #x y d están en Rn
 
-    t = [i for i in np.arange(a,b,h)]
+    t = [i for i in np.arange(a,b+h,h)]
     #print "t: ",t
-    valoresF = []
+    #valoresF = []
     minimo = f(x+a*d)
     tmin = a
     for i in range(len(t)):
         newValue = f(x + t[i]*d)
         if newValue < minimo:
             minimo = newValue
+            #print "tmin = ",t[i]
             #print "NUEVO MINIMO: ",minimo
             tmin = t[i]
     #minimo: en  f(t)
@@ -38,14 +39,14 @@ def min1abFB(f,x,d,a,b,h):
     # [tmin,f(tmin)]
     return [tmin,minimo]
 #EJEMPLO
-"""
+
 x = np.array([0,0])
 d = np.array([1,1]) #la dirección
 a = -1
 b = 1
 h = 0.1
-print minF(f2,x,d,a,b,h)
-"""
+#print min1abFB(f2,x,d,a,b,h)
+
 
 #PRUEBAS----------------------------
 #m1 = np.array([[1,2,3],[5,9,0]])
