@@ -4,7 +4,8 @@ import numpy as np
 
 LIM_INF = -1000
 LIM_SUP = 1000
-Eps_Interval =10**(-7) #Error de los intervalos
+h = 0.1
+Eps_Interval = 2*h #Error de los intervalos
 E = 10**(-5) #Error entre dos minimos
 a = -1
 b = 1
@@ -35,7 +36,7 @@ def MatCanonicos(x):
 
 
 
-        
+
 def MCC(f,x,Eps,maxit):
     #maxit empieza desde n y va disminuyendo
     dicInfo = {
@@ -47,37 +48,41 @@ def MCC(f,x,Eps,maxit):
     if maxit == 0:
         print dicInfo[0]
         return [x,f(x)]
-    
+
     if len(x) == 0:
         return "ERROR: x debe tener al menor una componente"
-    
+
     d = MatCanonicos(x)
     y_i = x
     cont = 0
     y_i1 = y_i
 
     Y = [y_i]
-    
+
     while cont < len(d):
         print "----------------"
         print "vector canonico: ",d[cont]
         res = minF_enR(f,y_i1,d[cont],0,1,0.1)
-        
+
         if res == 'inf':
             #En el caso que se desborde en la recta
             print dicInfo[-1]
             return [Y[-1],res[1]]
 
         else:
+            #AQUI ESTA EL ERROR
             tmin = res[0]
-            print "y_i: ",y_i1
-            y_i1 = y_i + tmin*d[cont]
-            print "y_i_1: ",y_i1
-            Y.append(y_i1)
+            print "tmin = ",tmin
+            print "y_i: ",y_i
+            ancientY = y_i
+            y_i = y_i + tmin*d[cont]
+            print "y_i+1: ",y_i
+
+            Y.append(y_i)
             print "Y: ",Y
             cont = cont + 1
-            
-    if abs(f(Y[-1]) - f(Y[-2])) <= Eps:
+
+    if abs(f(y_i) - f(Y[-2])) <= Eps:
         print "Diferencia final MINIMA"
         print dicInfo[1]
         return [Y[-1],f(Y[-1])]
