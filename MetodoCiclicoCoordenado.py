@@ -33,7 +33,7 @@ def MinimmoEnIntervalo(f,x,d,h,a,b):
 
     return tmin, f(x + tmin*d)
 
-def MinimoEnRecta(f,x,d,h,a,b,it):
+def MinimoEnRecta(f,x,d,h,a,b,it,intervalos):
     # f: funcion con la cual se busca el minimo
     # x: punto fijo
     # d: dirección
@@ -41,12 +41,16 @@ def MinimoEnRecta(f,x,d,h,a,b,it):
     # a: limite inferior del intervalo de t
     # b: limite suberior del intervalo de t
     # it: numero de la iteracion: comienza en 0
-
+    # intervalos: diccionario de  en el cual la llave es el intervalo
+    #             y el valor es el tmin en ese intervalo
+    #             para que en el caso que la busqueda comience en el minimo
+    #             no se quede en un bucle infinito
     # Esta función funciona por recursion 
 
     tmin, fmin = MinimmoEnIntervalo(f,x,d,h,a,b)
     # Numero maximo de iteraciones:
     maxit = 100
+    
     print("--------------------")
     print ("it: ",it)
     print("tmin: ",tmin)
@@ -59,28 +63,40 @@ def MinimoEnRecta(f,x,d,h,a,b,it):
         fmin = "-inf"
         return tmin, fmin
     else:
-        print("abs(tmin-a): ", abs(tmin-a))
-        print("abs(tmin-b): ", abs(tmin-b))
-        print("abs(tmin-a) <= eps ?", abs(tmin-a) <= eps)
-        print("abs(tmin-b) <= eps ?", abs(tmin-b) <= eps)
+        #print("abs(tmin-a): ", abs(tmin-a))
+        #print("abs(tmin-b): ", abs(tmin-b))
+        #print("abs(tmin-a) <= eps ?", abs(tmin-a) <= eps)
+        #print("abs(tmin-b) <= eps ?", abs(tmin-b) <= eps)
         if abs(tmin-a) <= eps or ((tmin < a)):
-            print("tmin EN EL LIIMITE IXQUIERDO a = " , a)
+            #print("tmin EN EL LIIMITE IXQUIERDO a = " , a)
             temp = a
             a = a -2
             b = temp
-            print("nuevo intervalo: ",[a,b])
-            return MinimoEnRecta(f,x,d,h,a,b,it+1)
+            #print(intervalos)
+            if ((a,b) in intervalos.keys()):
+                return intervalos[(a,b)][0] , intervalos[(a,b)][1] 
+            else:
+                #print("nuevo intervalo: ",[a,b])
+                intervalos[(a,b)] = (tmin,fmin)
+                return MinimoEnRecta(f,x,d,h,a,b,it+1,intervalos)
+            
         elif abs(tmin-b) <= eps or (tmin > b):
-            print("tmin EN EL LIMITE DERECHO b = " , b)
+            #print("tmin EN EL LIMITE DERECHO b = " , b)
             temp = b
             b = b+2
             a = temp
-            print("nuevo intervalo: ",[a,b])
-            return MinimoEnRecta(f,x,d,h,a,b,it+1)
+            #print(intervalos)
+            if ((a,b) in intervalos.keys()):
+                return intervalos[(a,b)][0] , intervalos[(a,b)][1] 
+            else:
+                #print("nuevo intervalo: ",[a,b])
+                intervalos[(a,b)] = (tmin,fmin)
+                return MinimoEnRecta(f,x,d,h,a,b,it+1,intervalos)
+            
         else:
-            print("MINIMO DENTRO DEL INTERVALO ENCONTRADO")
+            #print("MINIMO DENTRO DEL INTERVALO ENCONTRADO")
             tmin, fmin = MinimmoEnIntervalo(f,x,d,h,a,b)
-            return (tmin, fmin)
+            return tmin, fmin
 
 def MatCanonicos(x):
     # Funcion que retorna un arreglo bidimensional nxn donde cada sub arreglo
@@ -111,15 +127,19 @@ def MetodoCiclicoCoordenado(f,x):
     b = 1
     #punto = x
     m = MatCanonicos(x)
+
+    
     for can in m:
+        tmin, fmin = MinimmoEnIntervalo(f1,x,can,h,a,b)
+        intervalos = {(a,b):(tmin,fmin)}
         print("direccion: ",can)
-        tmin, fmin = MinimoEnRecta(f,x,can,h,a,b,0)
+        tmin, fmin = MinimoEnRecta(f,x,can,h,a,b,0,intervalos)
         if fmin == "-inf":
             print("FUNCION NO ACOTADA")
             return tmin, fmin
         else:
             x = x + tmin*can
-            print("CAMBIANDO CANONICO XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+            print("CAMBIANDO CANONICO xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
     return tmin, fmin
 
 #-------------------------------------
@@ -141,27 +161,25 @@ print ("fmin: ",fmin)
 
 #-------------------------------------
 #Prueba 2 de MinimoEnRecta
-
+"""
 x0 = np.array([0,0])
-d = np.array([1,0])
+d = np.array([0,1])
 h = 0.1
 a = 0
 b = 1
-
-tmin,fmin = MinimoEnRecta(f1,x0,d,h,a,b,0)
+tmin, fmin = MinimmoEnIntervalo(f1,x0,d,h,a,b)
+intervalos = {(a,b):(tmin,fmin)}
+tmin,fmin = MinimoEnRecta(f2,x0,d,h,a,b,0,intervalos)
 
 print("tmin: ",tmin)
 print("fmin: ",fmin)
-
+"""
 # FUNCIONA
 #-------------------------------------
+
 #-------------------------------------
-
-
 # Pruebas 3 - Metodo cíclico coordenado
-"""
-x = np.array([0,0])
-tmin, fmin = MetodoCiclicoCoordenado(f1,x)
+x = np.array([-1,0])
+tmin, fmin = MetodoCiclicoCoordenado(f2,x)
 print("tmin: ",tmin)
 print("fmin: ",fmin)
-"""
