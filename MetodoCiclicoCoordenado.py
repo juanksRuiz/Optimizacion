@@ -4,7 +4,7 @@ import numpy as np
 #Ejemplos de funciones
 def f1(x):
     #Paraboloide centrado en 0
-    res = ((x[0])**2)  ((x[1])**2)
+    res = ((x[0])**2) +((x[1])**2)
     return res
 
 def f2(x):
@@ -82,6 +82,46 @@ def MinimoEnRecta(f,x,d,h,a,b,it):
             tmin, fmin = MinimmoEnIntervalo(f,x,d,h,a,b)
             return (tmin, fmin)
 
+def MatCanonicos(x):
+    # Funcion que retorna un arreglo bidimensional nxn donde cada sub arreglo
+    # es un vector canonico y n es la longitud del vector x
+    # 
+    # x: arreglo numpy con n elementos  
+    m = []
+    for i in range(len(x)):
+        vc = []
+        for j in range(len(x)):
+            if j == i:
+                vc.append(1)
+            else:
+                vc.append(0)
+        m.append(vc)
+
+    m = np.array(m)
+    return m
+
+
+def MetodoCiclicoCoordenado(f,x):
+    # f: funcion con la cual se busca el minimo
+    # x: punto fijo
+    
+    # Valores por defecto para la funcion MinimoEnIntervalo
+    h = 0.1
+    a = 0
+    b = 1
+    #punto = x
+    m = MatCanonicos(x)
+    for can in m:
+        print("direccion: ",can)
+        tmin, fmin = MinimoEnRecta(f,x,can,h,a,b,0)
+        if fmin == "-inf":
+            print("FUNCION NO ACOTADA")
+            return tmin, fmin
+        else:
+            x = x + tmin*can
+            print("CAMBIANDO CANONICO XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    return tmin, fmin
+
 #-------------------------------------
 #Prueba 1 de MinimmoEnIntervalo()
 """
@@ -105,13 +145,23 @@ print ("fmin: ",fmin)
 x0 = np.array([0,0])
 d = np.array([1,0])
 h = 0.1
-a = -1
-b = 3
+a = 0
+b = 1
 
 tmin,fmin = MinimoEnRecta(f1,x0,d,h,a,b,0)
 
 print("tmin: ",tmin)
 print("fmin: ",fmin)
 
-# NO FUNCIONA
+# FUNCIONA
 #-------------------------------------
+#-------------------------------------
+
+
+# Pruebas 3 - Metodo cíclico coordenado
+"""
+x = np.array([0,0])
+tmin, fmin = MetodoCiclicoCoordenado(f1,x)
+print("tmin: ",tmin)
+print("fmin: ",fmin)
+"""

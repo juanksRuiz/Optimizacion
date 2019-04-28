@@ -93,5 +93,19 @@ def MCC(f,x,Eps,maxit):
         MCC(f,a,Eps,maxit-1)
 
 
-x = np.array([1,1])
-print MCC(f1,x,0.001,5)
+def func(n):
+    a = n
+    if a == 0:
+        return 10
+    else:
+        for i in range(a):
+            a = a+1
+            print "a: ",a
+            if a == 3:
+                func(0)
+            
+        return a
+            
+print func(2)
+#x = np.array([1,1])
+#print MCC(f1,x,0.001,5)
