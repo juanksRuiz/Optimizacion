@@ -34,14 +34,17 @@ function gr = grB(x)
 endfunction
 
 //hessiano de funcion barrera
-function Hess =HB(x)
-    H = [2,0;0;2];
-    a = (gr_d1(x)*gr_d1(x)')/(g1(x)^2)) + (H/(-g1(x)))
-    disp(a)
-    b = (gr_d2(x)*gr_d2(x)')/(g2(x)^2) + (H/(-g2(x)))
-    disp(a)
-    Hess = [a b]
+function Hess = HB(x)
+    H = [2,0;0,2];
+    h1 = (gr_d1(x)*gr_d1(x)')/((g1(x)^2)) + (H/(-g1(x))));
+    h2 = (gr_d2(x)*gr_d2(x)')/(g2(x)^2) + (H/(-g2(x)));
+    Hess = sum(h1,h2)
 endfunction
+H = [2,0;0,2]
+
+
+HB(x0)
+
 
 gr_f = [1;1.1];
 H_f = zeros(2,2);
