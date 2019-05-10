@@ -4,25 +4,6 @@ function y = f1(x)
     y3 = 0.3*x(1)*x(2) + 0.01*(x(1)-3)^4 + 0.01*(x(2)-4)^4
     y = y1 + y2 + y3
 endfunction
-function y = f2(x)
-    y = (x(1)^2) + (x(2)^2)
-endfunction
-
-function tmin_fmin = argmin(f,d,x0)
-    //Rehacer algoritmo
-    T = -100:1:100;
-    tmin = f(x0 + T(1)*d)
-    for i = 1:length(T)
-        T(i)
-        if f(x0 + T(i)*d) < tmin then
-            tmin = f(x0 + T(i)*d)
-        end
-        tmin_fmin = [tmin,f(x0 + tmin*d)]
-    end
-endfunction
-x0 = [1,0];
-d = [-1,0];
-r = argmin(f2,d,x0)
 
 /*
 x0 = [-2.5;1];
