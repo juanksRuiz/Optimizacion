@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 import numpy as np
-
+from math import e as exp
 #Ejemplos de funciones
 def f1(x):
     #Paraboloide centrado en 0
@@ -8,9 +8,7 @@ def f1(x):
     return res
 
 def f2(x):
-    a = (x[0] + x[1]-2)**2
-    b = (5*x[0]**2-1)**3
-    y = a + b
+    y = exp**(x[0]**2) + 2*x[1]**2
     return y
 
 def MinimmoEnIntervalo(f,x,d,h,a,b):
@@ -51,10 +49,10 @@ def MinimoEnRecta(f,x,d,h,a,b,it,intervalos):
     # Numero maximo de iteraciones:
     maxit = 100
 
-    print("--------------------")
-    print ("it: ",it)
-    print("tmin: ",tmin)
-    print("Intervalo actual: ",[a,b])
+    #print("--------------------")
+    #print ("it: ",it)
+    #print("tmin: ",tmin)
+    #print("Intervalo actual: ",[a,b])
     #Error al aproximarse a los limites del intervalo:
     eps = h
     if it == maxit:
@@ -63,44 +61,44 @@ def MinimoEnRecta(f,x,d,h,a,b,it,intervalos):
         fmin = "-inf"
         return tmin, fmin
     else:
-        print("abs(tmin-a): ", abs(tmin-a))
-        print("abs(tmin-b): ", abs(tmin-b))
-        print("abs(tmin-a) <= eps ?", abs(tmin-a) <= eps)
-        print("abs(tmin-b) <= eps ?", abs(tmin-b) <= eps)
+        #print("abs(tmin-a): ", abs(tmin-a))
+        #print("abs(tmin-b): ", abs(tmin-b))
+        #print("abs(tmin-a) <= eps ?", abs(tmin-a) <= eps)
+        #print("abs(tmin-b) <= eps ?", abs(tmin-b) <= eps)
         if abs(tmin-a) <= eps or ((tmin < a)):
-            print("tmin EN EL LIIMITE IXQUIERDO a = " , a)
+            #print("tmin EN EL LIIMITE IXQUIERDO a = " , a)
             temp = a
             a = a -2
             b = temp
-            print(intervalos)
+            #print(intervalos)
             if ((a,b) in intervalos.keys()):
-                print("INTERVALO  YA EVALUADO: ",(a,b))
-                print("punto minimizador: ",(x+tmin*d,fmin))
+                #print("INTERVALO  YA EVALUADO: ",(a,b))
+                #print("punto minimizador: ",(x+tmin*d,fmin))
                 return intervalos[(a,b)][0] , intervalos[(a,b)][1]
             else:
-                print("nuevo intervalo: ",[a,b])
+                #print("nuevo intervalo: ",[a,b])
                 intervalos[(a,b)] = (tmin,fmin)
                 return MinimoEnRecta(f,x,d,h,a,b,it+1,intervalos)
 
         elif abs(tmin-b) <= eps or (tmin > b):
-            print("tmin EN EL LIMITE DERECHO b = " , b)
+            #print("tmin EN EL LIMITE DERECHO b = " , b)
             temp = b
             b = b+2
             a = temp
-            print(intervalos)
+            #print(intervalos)
             if ((a,b) in intervalos.keys()):
-                print("INTERVALO [a,b] YA EVALUADO: ",(a,b))
-                print("punto minimizador: ",(x+tmin*d,fmin))
+                #print("INTERVALO [a,b] YA EVALUADO: ",(a,b))
+                #print("punto minimizador: ",(x+tmin*d,fmin))
                 return intervalos[(a,b)][0] , intervalos[(a,b)][1]
             else:
-                print("nuevo intervalo: ",[a,b])
+                #print("nuevo intervalo: ",[a,b])
                 intervalos[(a,b)] = (tmin,fmin)
                 return MinimoEnRecta(f,x,d,h,a,b,it+1,intervalos)
 
         else:
-            print("MINIMO DENTRO DEL INTERVALO ENCONTRADO")
+            #print("MINIMO DENTRO DEL INTERVALO ENCONTRADO")
             tmin, fmin = MinimmoEnIntervalo(f,x,d,h,a,b)
-            print("punto minimizador: ",(x+tmin*d,fmin))
+            #print("punto minimizador: ",(x+tmin*d,fmin))
             return tmin, fmin
 
 def MatCanonicos(x):
@@ -137,19 +135,20 @@ def MetodoCiclicoCoordenado(f,x):
     for can in m:
         tmin, fmin = MinimmoEnIntervalo(f1,x,can,h,a,b)
         intervalos = {(a,b):(tmin,fmin)}
-        print("direccion: ",can)
+        #print("direccion: ",can)
         tmin, fmin = MinimoEnRecta(f,x,can,h,a,b,0,intervalos)
         if fmin == "-inf":
             print("FUNCION NO ACOTADA")
-            return tmin, fmin
+            xf = "x optimo NO ENCONTRADO"
+            return tmin,xf, fmin
         else:
             x = x + tmin*can
-            print("CAMBIANDO CANONICO xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-    return tmin, fmin
+            #print("CAMBIANDO CANONICO xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    return tmin,x,fmin
 
 #-------------------------------------
 #Prueba 1 de MinimmoEnIntervalo()
-
+"""
 x0 = np.array([0,0])
 d = np.array([0,1])
 h = 0.1
@@ -160,7 +159,7 @@ tmin,fmin = MinimmoEnIntervalo(f2,x0,d,h,a,b)
 print ("tmin: ",tmin)
 print ("fmin: ",fmin)
 #print (tmin == a)
-
+"""
 # FUNCIONA
 #-------------------------------------
 
@@ -184,9 +183,10 @@ print("fmin: ",fmin)
 
 #-------------------------------------
 # Pruebas 3 - Metodo cíclico coordenado
-"""
-x = np.array([0,0])
-tmin, fmin = MetodoCiclicoCoordenado(f2,x)
+
+x = np.array([3.8,-1])
+tmin,xf, fmin = MetodoCiclicoCoordenado(f2,x)
 print("tmin: ",tmin)
+print("xf: ",xf)
 print("fmin: ",fmin)
-"""
+

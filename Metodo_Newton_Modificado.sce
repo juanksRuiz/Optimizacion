@@ -1,3 +1,5 @@
+
+//##############################################################################
 function y = f1(x)
     y1 = (x(1)+1.5)*(x(1)+0.5)*(x(1)-0.5)
     y2 = (x(2)-0.5)*(x(2)-1.5)*(x(2)-2.5)
@@ -40,7 +42,7 @@ function xk =  MN_Normal(x,Hf,fp,f)
     disp(d')
     xk = x+d
 endfunction
-/*
+
 
 x = [-2.5;1];
 for i = 1:5
@@ -50,7 +52,7 @@ for i = 1:5
     x = MN_Normal(x,Hf1,f1p,f1)
 end
 
-*/
+
 
 function x_fx = MN_Modificado(x,eps)
 endfunction
