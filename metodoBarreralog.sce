@@ -18,24 +18,27 @@ function xk = MetodoNewton(f,x0,n)
 endfunction
 
 // con calculos algebraicos previos;
-function xk = MetodoNewton2(f,x,n,grf,Hf)
+function xk = MetodoNewton2(f,x0,n,grf,Hf)
     // f: funcion que se busca minimizar;
     // x: punto inicial;
     // n: numero de iteraciones;
     // grf: gradiente columna de f que depende de x;
     // H: Hessiana de funcion f que depende de x;
     // retorna el x*;
+    disp("x")
+    disp(x)
+    xk = x0
     for i = 1:n
-        x
-        disp("Hessiano en x")
-        disp(Hf(x))
-        disp("gradiente en x")
-        disp(grf(x))
-        d = -Hf(x)\grf(x)
-        x = x + d
         disp("xk")
-        disp(x)
+        disp(xk)
+        disp("Hessiano en x")
+        disp(Hf(xk)) ///////////////////////////////////////////  ERROR
+        disp("gradiente en x")
+        disp(grf(xk))
+        d = -Hf(xk)\grf(xk)
+        xk = xk + d
         disp("xk actualizado")
+        disp("---------------------------------------------------------")
     end
 endfunction
 
@@ -43,12 +46,16 @@ endfunction
 A = [1,1;1,2;1,0;-1,0;0,-1];
 b = [4;5.8;3;0;0];
 c = [-1;1.4];
+t = 1
+x = [1;1];
 
 
 //Funcion f;
 function y= f(x)
     y = -x(1)-1.4*x(2);
 endfunction
+f(x)
+
 
 fp = c;
 Hf = zeros(2,2)
@@ -77,41 +84,39 @@ end
 
 
 //Gradiente de B
-function g= gr_B(x)
+function g= grB(x)
     g = A'*d;
 endfunction
+grB(x)
 
 // Hessiana de B;
-function H = H_B(x)
+function H = HB(x)
     H = A'*(diag(d)*diag(d))*A;
 endfunction
-
-H_B(x)
-
-t = 1
-x = [1;1];
-
+HB(x)
 
 //Funcion f_t, gradiente y Hessiana;
-function y= ft(x,t,f,B)
-    y = t*f(x) + B(x)
+function y= ft(x,t,func,Bar)
+    y = t*func(x) + Bar(x)
 endfunction
+ft(x,t,f,B)
 
-function y = gr_ft(x)
+function y = grft(x)
     //c: coeficientes de la funcion lineak que se está minimizando;
-    y = t*c + gr_B(x);
+    y = t*c + grB(x);
 endfunction
+grft(x)
+
 
 function H = Hft(x)
-    H = H_B(x);
+    disp("x")
+    disp(x)
+    H = HB(x);
 endfunction
-
-grft = gr_ft(x);
-H_ft = Hft(x)
 
 
 // xk = MetodoNewton2(f,x0,n,grf,Hf)
-MetodoNewton2(ft,x,10,gr_ft,Hft)
+MetodoNewton2(ft,x,10,grft,Hft)
 
 
 
