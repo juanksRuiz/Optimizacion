@@ -40,8 +40,8 @@ function xk = MetodoNewton(f,x0,n,dsol)
 endfunction
 
 //============================================================================
-function tmx = tmax_g(g, x, d, M)
-    //
+function tmx  = tmax_g(g, x, d, M)
+    // 
     // tmx = max { t  :  g( x + t d ) <= 0, 
     //             0 < t <= M }
     //
@@ -60,6 +60,7 @@ function tmx = tmax_g(g, x, d, M)
     g0 = g(x)
     if max(g0) >= -EPS0
     printf('El punto no es estrictamente factible.\n')
+    info = 0;
     tmx = -1000
     return
     end

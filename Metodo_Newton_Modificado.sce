@@ -77,9 +77,11 @@ end
 
 //###########################
 function x_fx = MN_Modificado(x,f,fp,Hf,eps, maxit)
+    //VER SI M(o H ) NO ES INVERTIBLE, EN ESE CASO PARA  EL METODO
     for k = 1:maxit
         disp("k")
         disp(k);
+        disp(x,"x")
         disp("###############################################################")
         norm(fp(x))
         if(norm(fp(x)) <= eps) then
@@ -125,6 +127,7 @@ function x_fx = MN_Modificado(x,f,fp,Hf,eps, maxit)
 endfunction
 //-------------------------------------------------------
 // Pruebas con la funcion
+x = [-2.5;1]
 x_fx = MN_Modificado(x,f1,f1p,Hf1,0.01,100)
 
 //(x,f,fp,Hf,eps, maxit)
