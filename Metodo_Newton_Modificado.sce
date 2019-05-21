@@ -17,6 +17,21 @@ function tmin = argmin(x,f,fp,d)
     end
 endfunction
 
+function lam = newLambda(M)
+    vecSigma = [];
+    for i = 1:size(M,1)
+        s = 0;
+        for j = 1:size(M,2)
+             if i~=j
+                 s = s + abs(M(i,j))
+             end
+        end
+        vecSigma(i) = s;
+    end
+    sigma = max(vecSigma - diag(M));
+    lam = max(sigma,0);
+endfunction
+
 
 //##############################################################################
 function y = f1(x)
@@ -91,8 +106,10 @@ function x_fx = MN_Modificado(x,f,fp,Hf,eps, maxit)
             disp(f(x)');
             x_fx = return(f(x)); /////////
         end
+        topLambda = newLambda(Hf(x));
         lambda = 0;
         fink = 0;
+        nLambda = 0;
         while fink == 0
             M = Hf(x) + lambda*eye(Hf(x));
             d = -M\fp(x);
@@ -105,6 +122,7 @@ function x_fx = MN_Modificado(x,f,fp,Hf,eps, maxit)
             disp(d');
             disp("x + d");
             disp((x+d)');
+            disp(f(x+d),"f(x + d)")
             disp("fp(x)^T*d")
             disp(fp(x)'*d)
             if f(x+d) < f(x) then
@@ -119,8 +137,8 @@ function x_fx = MN_Modificado(x,f,fp,Hf,eps, maxit)
                 x = x + tk*d;
                 fink = 1;
             else
-                // El aumento de lambda es arbitrario
-                lambda = lambda + 2.89; 
+                // El aumento de lambda NO es arbitrario
+                lambda = lambda + topLambda/3; 
             end
     end
     end
