@@ -83,5 +83,5 @@ endfunction
 //------------------------
 //Pruebas
 x = [2;3;4;5];
-xminf = ParTan(x,0.001,f,fp,1)
+xminf = ParTan(x,0.001,f,fp,10)
 //ParTan(x,eps,f,fprim,maxit)
