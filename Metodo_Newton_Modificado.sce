@@ -60,45 +60,91 @@ function Hess = Hf1(x)
     d = 6*x(2) + 0.12*(x(2)-4)^2 - 9;
     Hess = [a,b;c,d];
 endfunction
-//Con el metodo de Newton normal no se minimiza, ejemplo a continuacion
-/*
-function xk =  MN_Normal(x,Hf,fp,f)
-    disp("f(x)")
-    func = f(x)
-    disp(func')
-    H = Hf(x)
-    disp("Hf")
-    disp(H)
-    fp = fp(x)
-    disp("fp(x)")
-    disp(fp')
-    d = -H\fp
-    printf("d")
-    disp(d')
-    xk = x+d;
+//==============================================================================
+function y = f2(x)
+    a = x(1)^4 - 11*x(1)^3+41*x(1)^2;
+    b = -61*x(1) + 30 +(x(1) - x(2))^2 + (x(2) + x(3)-1)^2;
+    y = a+b;
 endfunction
 
-for i = 1:5
-    disp("----------------------------");
-    disp("k:");
-    disp(i);
-    x = MN_Normal(x,Hf1,f1p,f1);
-    disp("x:")
-    disp(x')
-end
+function grf2 = f2p(x)
+    a = 4*x(1)^3 + 82*x(1)-61-33*x(1)^2 + 2*(x(1)-x(2));
+    b = -2*(x(1)-x(2)) + 2*(x(2)+x(3)-1);
+    c = 2*(x(2)+x(3)-1);
+    grf2 = [a;b;c];
+endfunction
 
-*/
-//###########################
+function H = Hf2(x)
+    h1 = 12*x(1)^2 + 82 - 66*x(1) + 2;
+    H = [h1,-2,0;-2,4,2;0,2,2];
+endfunction
 
-//###########################
+
+//==============================================================================
+function y = f3(x)
+    a = (x(1)-2)^2 + 3*(x(1)^2-x(2))^2
+    y = a;
+endfunction
+
+function grf3 = f3p(x)
+    a = 2*(x(1)-2) + 12*(x(1)^2-x(2))*x(1);
+    b = -6*(x(1)^2-x(2))
+    grf3 = [a;b];
+endfunction
+
+function H = Hf3(x)
+    h1 = 2 + 12*(3*x(1)^2 - x(2))
+    h2 = -12*x(1)
+    h3 = h2
+    h4 = 6
+    H = [h1,h2;h3,h4];
+endfunction
+
+//==============================================================================
+
+function y = f4(x)
+    a = (x(1)-x(2))^2 - (x(2)+x(3)-1)^2
+    y = a;
+endfunction
+
+function grf4 = f4p(x)
+    a = 2*(x(1)-x(2))
+    b = -2*(x(1)-x(2)) - 2*(x(2)+x(3)-1)
+    c = -2*(x(2)+x(3)-1)
+    grf4 = [a;b;c];
+endfunction
+
+function H = Hf4(x)
+    H = [2,-2,0;-2,0,-2;0,-2,-2];
+endfunction
+
+//==============================================================================
+
+function y = f5(x)
+    a = (x(1)-2)^2 + (x(2)-3)^3
+    y = a;
+endfunction
+
+function grf5 = f5p(x)
+    a = 2*(x(1)-2)
+    b = 3*(x(2)-3)^2
+    grf5 = [a;b];
+endfunction
+
+function H = Hf5(x)
+    a = 6*(x(2)-3)
+    H = [2,0;0,a];
+endfunction
+
+//#############################################################################
 function x_fx = MN_Modificado(x,f,fp,Hf,eps, maxit)
     //VER SI M(o H ) NO ES INVERTIBLE, EN ESE CASO PARA  EL METODO
     for k = 1:maxit
-        disp("k")
-        disp(k);
-        disp(x,"x")
         disp("###############################################################")
-        norm(fp(x))
+        disp("Nueva iteracion")
+        disp(k,"k");
+        disp(x,"x")
+        disp(norm(fp(x)),"||fp(x)||");
         if(norm(fp(x)) <= eps) then
             disp("x:");
             disp(x');
@@ -109,19 +155,14 @@ function x_fx = MN_Modificado(x,f,fp,Hf,eps, maxit)
         topLambda = newLambda(Hf(x));
         lambda = 0;
         fink = 0;
-        nLambda = 0;
         while fink == 0
             M = Hf(x) + lambda*eye(Hf(x));
             d = -M\fp(x);
             disp("-----------------------------------------------------------");
-            disp("lambda");
-            disp(lambda);
-            disp("M");
-            disp(M);
-            disp("d");
-            disp(d');
-            disp("x + d");
-            disp((x+d)');
+            disp(lambda,"lambda");
+            disp(M,"M");
+            disp(d,"d");
+            disp((x+d)',"x + d");
             disp(f(x+d),"f(x + d)")
             disp("fp(x)^T*d")
             disp(fp(x)'*d)
@@ -141,11 +182,40 @@ function x_fx = MN_Modificado(x,f,fp,Hf,eps, maxit)
                 lambda = lambda + topLambda/3; 
             end
     end
-    end
+end
+disp("NUMERO MAXIMO DE ITERACIONES ALCANZADO")
 endfunction
+
+
 //-------------------------------------------------------
 // Pruebas con la funcion
-x = [-2.5;1]
-x_fx = MN_Modificado(x,f1,f1p,Hf1,0.01,100)
 
+x1 = [-2.5;1]
+x_fx1 = MN_Modificado(x1,f1,f1p,Hf1,0.01,100)
+
+
+/*
+x2 = [-1;2;1];
+x_fx2 = MN_Modificado(x2,f2,f2p,Hf2,0.01,100)
 //(x,f,fp,Hf,eps, maxit)
+*/
+
+/*
+x3 = [-1;2];
+x_fx3 = MN_Modificado(x3,f3,f3p,Hf3,0.01,1000)
+//(x,f,fp,Hf,eps, maxit)
+// NUMERO MAX DE ITERACIONES
+*/
+
+/*
+x4 = [-1;2;1];
+x_fx4 = MN_Modificado(x4,f4,f4p,Hf4,0.01,100)
+//(x,f,fp,Hf,eps, maxit)
+*/
+
+/*
+x5 = [-1;2];
+x_fx5 = MN_Modificado(x5,f5,f5p,Hf5,0.01,100)
+//(x,f,fp,Hf,eps, maxit)
+*/
+// NUMERO MAX DE ITERACIONES
