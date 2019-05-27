@@ -15,9 +15,7 @@ function tmin = argmin(x,f,fp,d)
         tmin = tmin*Beta;
         iter = iter + 1;
     end
-    disp(iter, "iteraciones minimizando");
     if tmin == maxit then
-        disp(iter, "ITERACIONES MINIMIZANDO (BACKTRACKING)");
         tmin = return(%inf)
     end
 endfunction
