@@ -1,6 +1,9 @@
+//Autor: Juan Camilo Ruiz
+
 function tmin = argmin(x,f,fp,d)
     maxit = 100;
     //Retroceso (backtracking)
+    // x: punto inicial
     // f: funcion objetivo
     // fp: greadiente de f
     // d: direccion (suponemos que d ya es de descenso)
@@ -20,6 +23,8 @@ function tmin = argmin(x,f,fp,d)
 endfunction
 
 function lam = newLambda(M)
+    // Metodo que calcula un lambda maximo dada la matriz M 
+    // para que no se vuelva demasiado lento
     vecSigma = [];
     for i = 1:size(M,1)
         s = 0;
@@ -140,7 +145,12 @@ endfunction
 
 //#############################################################################
 function x_fx = MN_Modificado(x,f,fp,Hf,eps, maxit)
-    //VER SI M(o H ) NO ES INVERTIBLE, EN ESE CASO PARA  EL METODO
+    // x: punto inicial
+    // f: funcion objetivo
+    // fp: gradiente de función objetivo
+    // Hf: Hessiana de funcion objetivo
+    // eps: cota para ver si la derivada es cercana a 0
+    // maxit: Numero maximo de iteraciones del método
     for k = 1:maxit
         disp("###############################################################")
         disp("Nueva iteracion")
