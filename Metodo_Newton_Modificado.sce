@@ -12,7 +12,9 @@ function tmin = argmin(x,f,fp,d)
         tmin = tmin*Beta;
         iter = iter + 1;
     end
+    disp(iter, "iteraciones minimizando");
     if tmin == maxit then
+        disp(iter, "ITERACIONES MINIMIZANDO (BACKTRACKING)");
         tmin = return(%inf)
     end
 endfunction
@@ -150,13 +152,18 @@ function x_fx = MN_Modificado(x,f,fp,Hf,eps, maxit)
             disp(x');
             disp("fmin");
             disp(f(x)');
-            x_fx = return(f(x)); /////////
+            x_fx = return(f(x));
         end
         topLambda = newLambda(Hf(x));
         lambda = 0;
         fink = 0;
         while fink == 0
             M = Hf(x) + lambda*eye(Hf(x));
+            disp(det(M),"det(M)")
+            if det(M) == 0 then
+                disp("M NO ES INVERTIBLE")
+                x_fx = return(-1);
+            end
             d = -M\fp(x);
             disp("-----------------------------------------------------------");
             disp(lambda,"lambda");
@@ -188,11 +195,15 @@ endfunction
 
 
 //-------------------------------------------------------
-// Pruebas con la funcion
+// Pruebas
+// Ejemplo con apuntes adicionales
+
 
 x1 = [-2.5;1]
 x_fx1 = MN_Modificado(x1,f1,f1p,Hf1,0.01,100)
 
+
+//Nuevas funciones
 
 /*
 x2 = [-1;2;1];
@@ -200,12 +211,13 @@ x_fx2 = MN_Modificado(x2,f2,f2p,Hf2,0.01,100)
 //(x,f,fp,Hf,eps, maxit)
 */
 
+
 /*
 x3 = [-1;2];
 x_fx3 = MN_Modificado(x3,f3,f3p,Hf3,0.01,1000)
 //(x,f,fp,Hf,eps, maxit)
-// NUMERO MAX DE ITERACIONES
 */
+
 
 /*
 x4 = [-1;2;1];
@@ -218,4 +230,5 @@ x5 = [-1;2];
 x_fx5 = MN_Modificado(x5,f5,f5p,Hf5,0.01,100)
 //(x,f,fp,Hf,eps, maxit)
 */
-// NUMERO MAX DE ITERACIONES
+
+// NUMERO MAX DE ITERACIONES ALCANZADO
